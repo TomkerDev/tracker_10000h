@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'logic/session_provider.dart';
 import 'core/theme.dart'; // 1. Importe ton nouveau fichier de thème
-import 'ui/screens/home_screen.dart';
+import 'ui/screens/main_screen.dart';
 import 'logic/timer_provider.dart';
 
 void main() async {
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.darkTheme, 
       
       // 3. Définit l'écran d'accueil
-      home: const HomeScreen(),
+      home: const MainScreen(),
     );
   }
 }
