@@ -73,4 +73,16 @@ class SessionProvider extends ChangeNotifier {
     notifyListeners();
     await _storage.saveSessions(_sessions);
   }
+  // Dans SessionProvider
+double get levelProgress {
+  final current = currentLevel;
+  final next = nextLevel;
+  
+  if (current == next) return 1.0; // Niveau max atteint (Légende)
+  
+  final range = next.minHours - current.minHours;
+  final progressInLevel = totalHours - current.minHours;
+  
+  return (progressInLevel / range).clamp(0.0, 1.0);
+}
 }
