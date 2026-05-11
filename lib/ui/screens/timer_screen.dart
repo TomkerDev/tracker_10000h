@@ -9,20 +9,34 @@ class TimerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Watch écoute les changements pour mettre à jour le texte du chrono
     final timerProvider = context.watch<TimerProvider>();
+    // Read permet d'appeler une action sans reconstruire tout le widget inutilement
     final sessionProvider = context.read<SessionProvider>();
 
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent, 
+        elevation: 0,
+        title: const Text("CHRONO"),
+        centerTitle: true,
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Affichage du temps (00:00:00)
             Text(
               timerProvider.formattedTime,
-              style: const TextStyle(fontSize: 80, fontWeight: FontWeight.bold, letterSpacing: 4),
+              style: const TextStyle(
+                fontSize: 80, 
+                fontWeight: FontWeight.bold, 
+                letterSpacing: 4
+              ),
             ),
             const SizedBox(height: 50),
+
+            // Bouton Play/Pause
             GestureDetector(
               onTap: () {
                 if (timerProvider.isRunning) {
@@ -52,26 +66,41 @@ class TimerScreen extends StatelessWidget {
                 ),
               ),
             ),
+            
+            const SizedBox(height: 40),
+
+            // Bouton Enregistrer (n'apparaît que si le timer est arrêté et > 0)
             if (!timerProvider.isRunning && timerProvider.seconds > 0)
               TextButton(
                 onPressed: () async {
-                  // Sauvegarde de la session
                   final newSession = Session(
                     id: DateTime.now().toString(),
                     date: DateTime.now(),
                     minutes: timerProvider.seconds ~/ 60,
                     category: 'Flutter',
                   );
+
                   await sessionProvider.addSession(newSession);
                   timerProvider.resetTimer();
-                  ScaffoldMessenger.of(context).showSnackBar(
-  const SnackBar(
-    content: Text("Session enregistrée !"),
-    backgroundColor: Color(0xFF22D3EE),
-    behavior: SnackBarBehavior.floating, // Pour l'effet moderne "flottant"
-  ),
-  );
-  }
-   }
- }
 
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Session enregistrée !"),
+                        backgroundColor: Color(0xFF22D3EE),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
+                },
+                child: const Text(
+                  "ENREGISTRER LA SESSION", 
+                  style: TextStyle(color: Color(0xFF22D3EE), fontWeight: FontWeight.bold),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
