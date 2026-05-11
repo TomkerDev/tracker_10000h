@@ -37,7 +37,7 @@ class SessionProvider extends ChangeNotifier {
   double get totalHours {
     int totalMinutes = 0;
     for (var session in _sessions) {
-      totalMinutes += session.minutes;
+      totalMinutes += session.seconds ~/ 60; // Convertir les secondes en minutes
     }
     return totalMinutes / 60;
   }

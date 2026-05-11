@@ -3,14 +3,14 @@
 class Session {
   final String id;
   final DateTime date;
-  final int minutes; // On stocke en minutes pour la précision
+  final int seconds; // On stocke en secondes pour la précision
   final String category; // Pratique, Théorie, etc.
   final String note;
 
   Session({
     required this.id,
     required this.date,
-    required this.minutes,
+    required this.seconds,
     required this.category,
     this.note = "",
   });
@@ -20,7 +20,7 @@ class Session {
     return {
       'id': id,
       'date': date.toIso8601String(),
-      'minutes': minutes,
+      'seconds': seconds,
       'category': category,
       'note': note,
     };
@@ -31,7 +31,7 @@ class Session {
     return Session(
       id: map['id'],
       date: DateTime.parse(map['date']),
-      minutes: map['minutes'],
+      seconds: map['seconds'],
       category: map['category'],
       note: map['note'] ?? "",
     );

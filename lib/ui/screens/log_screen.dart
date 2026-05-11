@@ -65,12 +65,40 @@ class LogScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "${session.minutes} min",
-                        style: const TextStyle(
-                          color: Color(0xFF22D3EE),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
+                        "${session.seconds ~/ 60} min ${session.seconds % 60} s")
+                        const SizedBox(width: 8),
+IconButton(
+  icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20),
+  onPressed: () {
+    // Afficher une boîte de dialogue de confirmation
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Supprimer ?"),
+        content: const Text("Voulez-vous vraiment effacer cette session ?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("ANNULER"),
+          ),
+          TextButton(
+            onPressed: () {
+              // Appeler la suppression
+              provider.deleteSession(session.id);
+              Navigator.pop(context);
+              
+              // Petit message de confirmation
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Session supprimée")),
+              );
+            },
+            child: const Text("SUPPRIMER", style: TextStyle(color: Colors.redAccent)),
+          ),
+        ],
+      ),
+    );
+  },
+),
                       ),
                     ],
                   ),

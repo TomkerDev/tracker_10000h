@@ -76,7 +76,7 @@ class TimerScreen extends StatelessWidget {
                   final newSession = Session(
                     id: DateTime.now().toString(),
                     date: DateTime.now(),
-                    minutes: timerProvider.seconds ~/ 60,
+                    seconds: timerProvider.seconds,
                     category: 'Flutter',
                   );
 
