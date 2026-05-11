@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'logic/session_provider.dart';
 import 'core/theme.dart'; // 1. Importe ton nouveau fichier de thème
 import 'ui/screens/home_screen.dart';
+import 'logic/timer_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,9 +11,12 @@ void main() async {
   final sessionProvider = SessionProvider();
   await sessionProvider.init();
 
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => sessionProvider,
+ runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => SessionProvider()..init()),
+        ChangeNotifierProvider(create: (_) => TimerProvider()),
+      ],
       child: const MyApp(),
     ),
   );
