@@ -27,7 +27,7 @@ class LogScreen extends StatelessWidget {
             )
           : ListView.builder(
               padding: const EdgeInsets.all(16),
-              itemCount: sessions.length, 
+              itemCount: sessions.length,
               itemBuilder: (context, index) {
                 final session = sessions[index];
                 return Container(
@@ -39,6 +39,7 @@ class LogScreen extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
+                      // Icône Code
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
@@ -48,12 +49,13 @@ class LogScreen extends StatelessWidget {
                         child: const Icon(Icons.code, color: Color(0xFF22D3EE)),
                       ),
                       const SizedBox(width: 16),
+                      
+                      // Infos Session
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              // CORRECTION : DateFormat fonctionnera après le 'flutter pub get'
                               DateFormat('dd/MM/yyyy').format(session.date),
                               style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
@@ -64,47 +66,61 @@ class LogScreen extends StatelessWidget {
                           ],
                         ),
                       ),
+                      
+                      // Durée
                       Text(
-                        "${session.seconds ~/ 60} min ${session.seconds % 60} s")
-                        const SizedBox(width: 8),
-IconButton(
-  icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20),
-  onPressed: () {
-    // Afficher une boîte de dialogue de confirmation
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Supprimer ?"),
-        content: const Text("Voulez-vous vraiment effacer cette session ?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("ANNULER"),
-          ),
-          TextButton(
-            onPressed: () {
-              // Appeler la suppression
-              provider.deleteSession(session.id);
-              Navigator.pop(context);
-              
-              // Petit message de confirmation
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Session supprimée")),
-              );
-            },
-            child: const Text("SUPPRIMER", style: TextStyle(color: Colors.redAccent)),
-          ),
-        ],
-      ),
-    );
-  },
-),
+                        "${session.seconds ~/ 60} min",
+                        style: const TextStyle(
+                          color: Color(0xFF22D3EE),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+
+                      // BOUTON SUPPRIMER
+                      const SizedBox(width: 8),
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20),
+                        onPressed: () {
+                          _showDeleteDialog(context, provider, session.id);
+                        },
                       ),
                     ],
                   ),
                 );
               },
             ),
+    );
+  }
+
+  // Fonction pour afficher la boîte de dialogue (plus propre que de tout mettre dans le build)
+  void _showDeleteDialog(BuildContext context, SessionProvider provider, String id) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF111827),
+        title: const Text("Supprimer ?"),
+        content: const Text("Voulez-vous vraiment effacer cette session ?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("ANNULER", style: TextStyle(color: Colors.grey)),
+          ),
+          TextButton(
+            onPressed: () {
+              provider.deleteSession(id);
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Session supprimée"),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            },
+            child: const Text("SUPPRIMER", style: TextStyle(color: Colors.redAccent)),
+          ),
+        ],
+      ),
     );
   }
 }
