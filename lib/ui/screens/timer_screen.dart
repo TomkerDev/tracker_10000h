@@ -64,13 +64,11 @@ class TimerScreen extends StatelessWidget {
                   );
                   await sessionProvider.addSession(newSession);
                   timerProvider.resetTimer();
-                  ScaffoldMessenger.of(context).showToast(const Text("Session enregistrée !"));
-                },
-                child: const Text("ENREGISTRER LA SESSION", style: TextStyle(color: Color(0xFF22D3EE))),
-              )
-          ],
-        ),
-      ),
-    );
+                  ScaffoldMessenger.of(context).showSnackBar(
+  const SnackBar(
+    content: Text("Session enregistrée !"),
+    backgroundColor: Color(0xFF22D3EE),
+    behavior: SnackBarBehavior.floating, // Pour l'effet moderne "flottant"
+  ),
+  );
   }
-}
