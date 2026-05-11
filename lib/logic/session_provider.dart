@@ -85,4 +85,16 @@ double get levelProgress {
   
   return (progressInLevel / range).clamp(0.0, 1.0);
 }
+// Dans lib/logic/session_provider.dart
+
+Future<void> deleteSession(String id) async {
+  // 1. Retirer la session de la liste en mémoire
+  _sessions.removeWhere((session) => session.id == id);
+  
+  // 2. Prévenir l'UI de se rafraîchir
+  notifyListeners();
+  
+  // 3. Sauvegarder la nouvelle liste (sans la session supprimée) sur le disque
+  await _storage.saveSessions(_sessions);
+}
 }
