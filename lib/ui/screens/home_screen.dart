@@ -8,10 +8,13 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // On écoute le provider
+    // On écoute le provider pour obtenir les données en temps réel
     final provider = context.watch<SessionProvider>();
     final totalHours = provider.totalHours;
     final progressPercent = totalHours / 10000;
+    
+    // On récupère les infos du niveau actuel
+    final currentLevel = provider.currentLevel;
 
     return Scaffold(
       body: Container(
@@ -20,16 +23,32 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // --- NOUVEAU : Affichage du Niveau ---
+            Text(
+              "${currentLevel.icon} ${currentLevel.label.toUpperCase()}",
+              style: TextStyle(
+                fontSize: 18, 
+                fontWeight: FontWeight.bold, 
+                color: currentLevel.color, // La couleur changera selon le niveau
+                letterSpacing: 2
+              ),
+            ),
+            const SizedBox(height: 10),
+            // ---------------------------------------
+            
             const Text(
               "MAÎTRISE FLUTTER",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, letterSpacing: 4),
             ),
             const SizedBox(height: 40),
+            
             ProgressCircle(
               progress: progressPercent,
               hours: totalHours,
             ),
+            
             const SizedBox(height: 40),
+            
             _buildStatCard("Objectif", "10,000h", Icons.flag),
           ],
         ),
