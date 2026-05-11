@@ -97,4 +97,19 @@ Future<void> deleteSession(String id) async {
   // 3. Sauvegarder la nouvelle liste (sans la session supprimée) sur le disque
   await _storage.saveSessions(_sessions);
 }
+
+// Récupère les totaux des 7 derniers jours
+Map<int, double> get weeklyStats {
+  Map<int, double> stats = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0};
+  
+  DateTime now = DateTime.now();
+  // On ne garde que les sessions des 7 derniers jours
+  for (var session in _sessions) {
+    if (now.difference(session.date).inDays < 7) {
+      int weekday = session.date.weekday; // 1 = Lundi, 7 = Dimanche
+      stats[weekday] = (stats[weekday] ?? 0) + (session.seconds / 3600);
+    }
+  }
+  return stats;
+}
 }
