@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Import du package
+import 'package:provider/provider.dart';
 import 'logic/session_provider.dart';
+import 'core/theme.dart'; // 1. Importe ton nouveau fichier de thème
+import 'ui/screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // On crée le provider et on lance l'initialisation
   final sessionProvider = SessionProvider();
   await sessionProvider.init();
 
@@ -16,6 +17,7 @@ void main() async {
     ),
   );
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -23,13 +25,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '10000h Tracker',
-      theme: ThemeData(
-        brightness: Brightness.dark, // On garde l'esprit Dark Mode
-        primarySwatch: Colors.blue,
-      ),
-      home: const Scaffold(
-        body: Center(child: Text('Backend Initialisé !')),
-      ),
+      debugShowCheckedModeBanner: false, // Enlève la petite bannière "Debug"
+      
+      // 2. Applique ton thème personnalisé ici
+      theme: AppTheme.darkTheme, 
+      
+      // 3. Définit l'écran d'accueil
+      home: const HomeScreen(),
     );
   }
 }
