@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/session.dart';
 import '../services/storage_service.dart';
 
+// 1. Définition de la structure d'un Niveau
 class LevelInfo {
   final String label;
   final String icon;
@@ -11,10 +12,14 @@ class LevelInfo {
   LevelInfo(this.label, this.icon, this.color, this.minHours);
 }
 
+// 2. Le Cerveau de l'application
 class SessionProvider extends ChangeNotifier {
-  // ... tes variables existantes (_sessions, _storage, etc.)
+  final StorageService _storage = StorageService();
+  
+  List<Session> _sessions = [];
+  bool _isLoading = true;
 
-  // 1. Définition des paliers de progression
+  // Définition des paliers
   final List<LevelInfo> levels = [
     LevelInfo("Novice", "🔰", const Color(0xFF94A3B8), 0),
     LevelInfo("Apprenti", "🔨", const Color(0xFF4ADE80), 500),
@@ -24,36 +29,11 @@ class SessionProvider extends ChangeNotifier {
     LevelInfo("Légende", "👑", const Color(0xFFA78BFA), 9000),
   ];
 
-  // 2. Getter pour obtenir le niveau actuel
-  LevelInfo get currentLevel {
-    final hours = totalHours;
-    // On parcourt la liste à l'envers pour trouver le plus haut palier atteint
-    return levels.reversed.firstWhere(
-      (level) => hours >= level.minHours,
-      orElse: () => levels.first,
-    );
-  }
-
-  // 3. Calcul du prochain palier (pour la barre de progression secondaire)
-  LevelInfo get nextLevel {
-    final hours = totalHours;
-    return levels.firstWhere(
-      (level) => level.minHours > hours,
-      orElse: () => levels.last,
-    );
-  }
-
-class SessionProvider extends ChangeNotifier {
-  final StorageService _storage = StorageService();
-  
-  List<Session> _sessions = [];
-  bool _isLoading = true;
-
-  // Getters pour accéder aux données depuis l'UI
+  // Getters
   List<Session> get sessions => _sessions;
   bool get isLoading => _isLoading;
 
-  // Calcul du total d'heures (La fameuse progression vers 10 000)
+  // Calcul du total d'heures
   double get totalHours {
     int totalMinutes = 0;
     for (var session in _sessions) {
@@ -62,17 +42,35 @@ class SessionProvider extends ChangeNotifier {
     return totalMinutes / 60;
   }
 
-  // Initialisation : Charger les données au lancement
+  // Logique du niveau actuel
+  LevelInfo get currentLevel {
+    final hours = totalHours;
+    return levels.reversed.firstWhere(
+      (level) => hours >= level.minHours,
+      orElse: () => levels.first,
+    );
+  }
+
+  // Logique du prochain niveau
+  LevelInfo get nextLevel {
+    final hours = totalHours;
+    return levels.firstWhere(
+      (level) => level.minHours > hours,
+      orElse: () => levels.last,
+    );
+  }
+
+  // Initialisation (Chargement depuis le téléphone)
   Future<void> init() async {
     _sessions = await _storage.loadSessions();
     _isLoading = false;
-    notifyListeners(); // Prévient l'UI qu'il faut se rafraîchir
+    notifyListeners();
   }
 
-  // Ajouter une session
+  // Ajouter une session et sauvegarder
   Future<void> addSession(Session session) async {
-    _sessions.insert(0, session); // Ajoute au début de la liste
+    _sessions.insert(0, session); 
     notifyListeners();
-    await _storage.saveSessions(_sessions); // Sauvegarde persistante
+    await _storage.saveSessions(_sessions);
   }
 }
