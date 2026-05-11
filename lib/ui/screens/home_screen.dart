@@ -74,6 +74,12 @@ Column(
         ),
       ),
     );
+    // Dans le Column du HomeScreen
+const SizedBox(height: 30),
+const Text("ACTIVITÉ (7J)", 
+  style: TextStyle(fontSize: 12, color: Colors.grey, letterSpacing: 2)),
+const SizedBox(height: 10),
+ActivityChart(data: provider.weeklyStats),
     
   }
   
