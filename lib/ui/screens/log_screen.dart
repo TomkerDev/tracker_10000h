@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart'; // Pour formater les dates
+import 'package:intl/intl.dart'; 
 import '../../logic/session_provider.dart';
 
 class LogScreen extends StatelessWidget {
@@ -19,10 +19,15 @@ class LogScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: sessions.isEmpty
-          ? const Center(child: Text("Aucune session enregistrée", style: TextStyle(color: Colors.grey)))
+          ? const Center(
+              child: Text(
+                "Aucune session enregistrée", 
+                style: TextStyle(color: Colors.grey)
+              ),
+            )
           : ListView.builder(
               padding: const EdgeInsets.all(16),
-              itemCount: sessions.size,
+              itemCount: sessions.length, 
               itemBuilder: (context, index) {
                 final session = sessions[index];
                 return Container(
@@ -34,7 +39,6 @@ class LogScreen extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      // Icône ou Tag
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
@@ -44,13 +48,13 @@ class LogScreen extends StatelessWidget {
                         child: const Icon(Icons.code, color: Color(0xFF22D3EE)),
                       ),
                       const SizedBox(width: 16),
-                      // Détails
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              DateFormat('dd MMMM yyyy').format(session.date),
+                              // CORRECTION : DateFormat fonctionnera après le 'flutter pub get'
+                              DateFormat('dd/MM/yyyy').format(session.date),
                               style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
@@ -60,7 +64,6 @@ class LogScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      // Durée
                       Text(
                         "${session.minutes} min",
                         style: const TextStyle(
