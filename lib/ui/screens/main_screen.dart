@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'timer_screen.dart';
+import 'log_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -16,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _screens = [
     const HomeScreen(),
     const TimerScreen(),
-    const Center(child: Text("Journal (Bientôt)")), // On fera le log après
+    const LogScreen(),
   ];
 
   @override
