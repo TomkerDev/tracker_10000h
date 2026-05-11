@@ -46,6 +46,26 @@ class HomeScreen extends StatelessWidget {
               progress: progressPercent,
               hours: totalHours,
             ),
+            // Sous le ProgressCircle dans home_screen.dart
+const SizedBox(height: 20),
+Column(
+  children: [
+    ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: LinearProgressIndicator(
+        value: provider.levelProgress,
+        backgroundColor: Colors.white10,
+        color: currentLevel.color,
+        minHeight: 8,
+      ),
+    ),
+    const SizedBox(height: 8),
+    Text(
+      "Vers le rang ${provider.nextLevel.label}",
+      style: const TextStyle(color: Colors.grey, fontSize: 12),
+    ),
+  ],
+),
             
             const SizedBox(height: 40),
             
@@ -54,7 +74,9 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+    
   }
+  
 
   Widget _buildStatCard(String label, String value, IconData icon) {
     return Container(
