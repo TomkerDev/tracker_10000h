@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'timer_screen.dart';
 import 'log_screen.dart';
+import '../../logic/timer_provider.dart';
+import 'package:provider/provider.dart';
+
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -31,7 +34,7 @@ class _MainScreenState extends State<MainScreen> {
         currentIndex: _selectedIndex,
         onTap: (index) => setState(() => _selectedIndex = index),
         backgroundColor: const Color(0xFF070D1A),
-        selectedItemColor: const Color(0xFF22D3EE),
+        selectedItemColor: context.watch<TimerProvider>().activeColor,
         unselectedItemColor: Colors.grey,
         showSelectedLabels: false,
         showUnselectedLabels: false,

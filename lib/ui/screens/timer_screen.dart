@@ -37,7 +37,7 @@ class TimerScreen extends StatelessWidget {
                       onSelected: (selected) {
                         if (selected) timerProvider.setCategory(cat);
                       },
-                      selectedColor: const Color(0xFF22D3EE),
+                      selectedColor: timerProvider.activeColor,
                     ),
                   );
                 }).toList(),
@@ -63,7 +63,7 @@ class TimerScreen extends StatelessWidget {
                 width: 100, height: 100,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: timerProvider.isRunning ? Colors.redAccent : const Color(0xFF22D3EE),
+                  color: timerProvider.isRunning ? Colors.redAccent : timerProvider.activeColor,
                 ),
                 child: Icon(timerProvider.isRunning ? Icons.pause : Icons.play_arrow, size: 50),
               ),
