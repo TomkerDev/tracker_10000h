@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../logic/session_provider.dart';
 import '../widgets/progress_circle.dart';
-import '../widgets/activity_chart.dart'; // N'oublie pas cet import !
-
+import '../widgets/activity_chart.dart'; // N'oublie pas cet import i
+import '../../logic/timer_provider.dart'; // Import pour accéder à la couleur active du Timer
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -13,6 +13,9 @@ class HomeScreen extends StatelessWidget {
     final totalHours = provider.totalHours;
     final progressPercent = totalHours / 10000;
     final currentLevel = provider.currentLevel;
+    // 1. Récupère la couleur active du Timer dans le build du HomeScreen
+    final activeColor = context.watch<TimerProvider>().activeColor;
+
 
     return Scaffold(
       body: SingleChildScrollView( // Ajouté pour éviter les erreurs de pixels si l'écran est petit
@@ -56,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                     child: LinearProgressIndicator(
                       value: provider.levelProgress,
                       backgroundColor: Colors.white10,
-                      color: currentLevel.color,
+                      color: activeColor,
                       minHeight: 8,
                     ),
                   ),
