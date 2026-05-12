@@ -10,6 +10,17 @@ class TimerProvider extends ChangeNotifier {
   int get seconds => _seconds;
   bool get isRunning => _isRunning;
 
+  String _selectedCategory = "Flutter"; // Catégorie par défaut
+  
+  // Liste des catégories disponibles
+  final List<String> categories = ["Flutter", "Dart", "Design", "Firebase", "Algo"];
+
+  String get selectedCategory => _selectedCategory;
+
+  void setCategory(String category) {
+    _selectedCategory = category;
+    notifyListeners();
+  }
   void startTimer() {
     if (_isRunning) return;
     
