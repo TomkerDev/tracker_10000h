@@ -9,14 +9,13 @@ class TimerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Watch écoute les changements pour mettre à jour le texte du chrono
     final timerProvider = context.watch<TimerProvider>();
-    // Read permet d'appeler une action sans reconstruire tout le widget inutilement
     final sessionProvider = context.read<SessionProvider>();
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent, 
+        // CORRECTION : Utilisation de paramètres nommés uniquement
+        backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text("CHRONO"),
         centerTitle: true,
@@ -25,59 +24,64 @@ class TimerScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Affichage du temps (00:00:00)
-            Text(
-              timerProvider.formattedTime,
-              style: const TextStyle(
-                fontSize: 80, 
-                fontWeight: FontWeight.bold, 
-                letterSpacing: 4
+            // --- LE SÉLECTEUR DE CATÉGORIES ---
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: timerProvider.categories.map((cat) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: ChoiceChip(
+                      label: Text(cat),
+                      selected: timerProvider.selectedCategory == cat,
+                      onSelected: (selected) {
+                        if (selected) timerProvider.setCategory(cat);
+                      },
+                      selectedColor: const Color(0xFF22D3EE),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
+            
+            const SizedBox(height: 50),
+
+            // Affichage du temps
+            Text(
+              timerProvider.formattedTime,
+              style: const TextStyle(fontSize: 80, fontWeight: FontWeight.bold),
+            ),
+
             const SizedBox(height: 50),
 
             // Bouton Play/Pause
             GestureDetector(
-              onTap: () {
-                if (timerProvider.isRunning) {
-                  timerProvider.stopTimer();
-                } else {
-                  timerProvider.startTimer();
-                }
-              },
+              onTap: () => timerProvider.isRunning 
+                  ? timerProvider.stopTimer() 
+                  : timerProvider.startTimer(),
               child: Container(
-                width: 100,
-                height: 100,
+                width: 100, height: 100,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: timerProvider.isRunning ? Colors.redAccent : const Color(0xFF22D3EE),
-                  boxShadow: [
-                    BoxShadow(
-                      color: (timerProvider.isRunning ? Colors.redAccent : const Color(0xFF22D3EE)).withOpacity(0.4),
-                      blurRadius: 20,
-                      spreadRadius: 5,
-                    )
-                  ],
                 ),
-                child: Icon(
-                  timerProvider.isRunning ? Icons.pause : Icons.play_arrow,
-                  size: 50,
-                  color: Colors.black,
-                ),
+                child: Icon(timerProvider.isRunning ? Icons.pause : Icons.play_arrow, size: 50),
               ),
             ),
-            
+
             const SizedBox(height: 40),
 
-            // Bouton Enregistrer (n'apparaît que si le timer est arrêté et > 0)
+            // Bouton Enregistrer
             if (!timerProvider.isRunning && timerProvider.seconds > 0)
               TextButton(
                 onPressed: () async {
+                  // CORRECTION : On s'assure que le nom du paramètre correspond au modèle
                   final newSession = Session(
                     id: DateTime.now().toString(),
                     date: DateTime.now(),
                     seconds: timerProvider.seconds,
-                    category: 'Flutter',
+                    minutes: (timerProvider.seconds / 60).ceil(),
+                    category: timerProvider.selectedCategory,
                   );
 
                   await sessionProvider.addSession(newSession);
@@ -85,18 +89,11 @@ class TimerScreen extends StatelessWidget {
 
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Session enregistrée !"),
-                        backgroundColor: Color(0xFF22D3EE),
-                        behavior: SnackBarBehavior.floating,
-                      ),
+                      const SnackBar(content: Text("Session enregistrée !")),
                     );
                   }
                 },
-                child: const Text(
-                  "ENREGISTRER LA SESSION", 
-                  style: TextStyle(color: Color(0xFF22D3EE), fontWeight: FontWeight.bold),
-                ),
+                child: const Text("ENREGISTRER LA SESSION"),
               ),
           ],
         ),
